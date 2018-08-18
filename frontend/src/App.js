@@ -17,7 +17,13 @@ class App extends Component {
     this.setState({ posts })
   }
 
-  handlePostSave = async (e) => {
+  handleDelete = async id => {
+    await api.delete(`/posts/${id}`)
+
+    this.setState({ posts: this.state.posts.filter(item => item.id !== id) })
+  }
+
+  handlePostSave = async e => {
     e.preventDefault()
 
     const { data: post } = await api.post('/posts', { content: this.state.newPostContent })
@@ -38,7 +44,7 @@ class App extends Component {
 
         <ul>
           { this.state.posts.map(post => (
-            <li key={ post.id }>{ post.content }</li>
+            <li onClick={ () => this.handleDelete(post.id) } key={ post.id }>{ post.content }</li>
           )) }
         </ul>
       </div>
